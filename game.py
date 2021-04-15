@@ -4,6 +4,28 @@ from minesweeper_gui import Cells
 import pygame
 
 
+def set_board(rows, cols):
+    """
+    Set up bard based on rows and columns
+    """
+    cell_group = pygame.sprite.Group()
+    cell_centers = []
+    for r in range(rows):
+        col_centers = []
+        rc = r*20 + 10
+        for c in range(cols):
+            center = [rc, c*20 + 10]
+            cell_group.add(Cells(center, 4, 0))
+            col_centers.append(center)
+        cell_centers.append(col_centers)
+    return cell_group, cell_centers
+
+def set_mines(cell_group, first_click):
+    """
+    Place mines and populate cells
+    """
+
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode((700, 700))
@@ -12,27 +34,21 @@ def main():
     clock = pygame.time.Clock()
     fps = 50
 
-    cell = Cells([400, 200], 4, 0)
-    cell.move = [pygame.K_LEFT, pygame.K_RIGHT]
+    rows, cols = 16, 30
 
-    cell_group = pygame.sprite.Group()
-    cell_group.add(cell)
+    board, cell_id = set_board(rows, cols)
+
+    # cell = Cells([400, 200], 4, 0)
 
     while True:
-        key = pygame.key.get_pressed()
-        if key[cell.move[0]]:
-            cell.open_sesame()
-        elif key[cell.move[1]]:
-            cell.flag_it()
-
-        cell_group.draw(screen)
+        board.draw(screen)
 
         pygame.display.update()
         clock.tick(fps)
 
         # Gathering event information
         event_list = pygame.event.get()
-        cell_group.update(event_list)
+        board.update(event_list)
 
         # Check for exit signal
         for event in event_list:
