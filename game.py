@@ -14,7 +14,8 @@ COLS = 30
 
 def set_board(ROWS, COLS):
     """
-    Set up bard based on ROWS and columns """
+    Set up board based on ROWS and columns
+    """
     cell_group = pygame.sprite.Group()
     cell_id = []
     for r in range(ROWS):
@@ -63,27 +64,7 @@ def set_mines(cell_id, mine_count=10):
         for c in range(COLS):
             cell_id[r][c].state = 0
 
-def open_neighbours(cell_id, loc_x, loc_y):
-    """
-    Open all unflagged neighbouring cells if number of flagged neighbours matches cell value
-    """
-    if cell_id[loc_x][loc_y].state != 1:      # Execute code only when cell is open
-        return
 
-    count_flagged = 0
-    for k in ADJ:
-        x, y = loc_x + k[0], loc_y + k[1]
-        if x >= 0 and x < ROWS and y >= 0 and y < COLS:
-            if cell_id[x][y].state == 2:
-                count_flagged += 1
-    if cell_id[loc_x][loc_y].get_value() == count_flagged:
-        for k in ADJ:
-            x, y = loc_x + k[0], loc_y + k[1]
-            if x >= 0 and x < ROWS and y >= 0 and y < COLS:
-                if cell_id[x][y].state == 0:
-                    cell_id[x][y].open_sesame()
-                    if cell_id[x][y].get_value() == 0:
-                        blank_encounter(cell_id, x, y)
 
 
 def blank_encounter(cell_id, loc_x, loc_y):
@@ -94,10 +75,33 @@ def blank_encounter(cell_id, loc_x, loc_y):
     for k in ADJ:
         x, y = loc_x + k[0], loc_y + k[1]
         if x >= 0 and x < ROWS and y >= 0 and y < COLS:     # Check bounds on location
-            if cell_id[x][y].state == 0:    # Check if cell is closed
+            if cell_id[x][y].state == 0:    # Check if cell is closed (prevents infinite recursion)
                 cell_id[x][y].open_sesame()
                 if cell_id[x][y].get_value() == 0:
                     blank_encounter(cell_id, x, y)
+
+
+def open_neighbours(cell_id, loc_x, loc_y):
+    """
+    Open all unflagged neighbouring cells if number of flagged neighbours matches cell value
+    """
+    if cell_id[loc_x][loc_y].state != 1:      # Execute code only when cell is open
+        return
+
+    count_flagged = 0
+    for k in ADJ:
+        x, y = loc_x + k[0], loc_y + k[1]
+        if x >= 0 and x < ROWS and y >= 0 and y < COLS: # Check bounds on location
+            if cell_id[x][y].state == 2:
+                count_flagged += 1
+    if cell_id[loc_x][loc_y].get_value() == count_flagged:
+        for k in ADJ:
+            x, y = loc_x + k[0], loc_y + k[1]
+            if x >= 0 and x < ROWS and y >= 0 and y < COLS:
+                if cell_id[x][y].state == 0:        # Check if cell is closed
+                    cell_id[x][y].open_sesame()
+                    if cell_id[x][y].get_value() == 0:
+                        blank_encounter(cell_id, x, y)
 
 
 def main():
