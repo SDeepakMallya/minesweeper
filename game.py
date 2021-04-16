@@ -7,14 +7,14 @@ import random
 
 CELL_WIDTH = 20
 CELL_HEIGHT = 20
+ADJ = [(i, j) for i in [-1, 0, 1] for j in [-1, 0, 1]]
 
 ROWS = 16
 COLS = 30
 
 def set_board(ROWS, COLS):
     """
-    Set up bard based on ROWS and columns
-    """
+    Set up bard based on ROWS and columns """
     cell_group = pygame.sprite.Group()
     cell_id = []
     for r in range(ROWS):
@@ -46,18 +46,16 @@ def set_mines(cell_id, mine_count=10):
         mr, mc = random.randint(0, ROWS-1), random.randint(0, COLS-1)
         cell_id[mr][mc].set_value(-1)
 
-    # Count number of mines in neighbouring cells
-    adj = [(i, j) for i in [-1, 0, 1] for j in [-1, 0, 1]]
+    # # Count number of mines in neighbouring cells
     for r in range(ROWS):
         for c in range(COLS):
             if cell_id[r][c].get_value() != -1:
                 count = 0
-                for k in adj:
+                for k in ADJ:
                     x, y = r + k[0], c + k[1]
-                    if x < 0 or x >= ROWS or y < 0 or y >= COLS:
-                        continue
-                    if cell_id[x][y].get_value() == -1:
-                        count += 1
+                    if x >= 0 and x < ROWS and y >= 0 and y < COLS:
+                        if cell_id[x][y].get_value() == -1:
+                            count += 1
                 cell_id[r][c].set_value(count)
 
     # Set state of cells to closed (0)
@@ -65,20 +63,41 @@ def set_mines(cell_id, mine_count=10):
         for c in range(COLS):
             cell_id[r][c].state = 0
 
+def open_neighbours(cell_id, loc_x, loc_y):
+    """
+    Open all unflagged neighbouring cells if number of flagged neighbours matches cell value
+    """
+    if cell_id[loc_x][loc_y].state != 1:      # Execute code only when cell is open
+        return
 
-def encounter_blank(cell_id, loc_x, loc_y):
+    count_flagged = 0
+    for k in ADJ:
+        x, y = loc_x + k[0], loc_y + k[1]
+        if x >= 0 and x < ROWS and y >= 0 and y < COLS:
+            if cell_id[x][y].state == 2:
+                count_flagged += 1
+    if cell_id[loc_x][loc_y].get_value() == count_flagged:
+        for k in ADJ:
+            x, y = loc_x + k[0], loc_y + k[1]
+            if x >= 0 and x < ROWS and y >= 0 and y < COLS:
+                if cell_id[x][y].state == 0:
+                    cell_id[x][y].open_sesame()
+                    if cell_id[x][y].get_value() == 0:
+                        blank_encounter(cell_id, x, y)
+
+
+def blank_encounter(cell_id, loc_x, loc_y):
     """
     Open all neighbouring cells when a blank cell is encountered
     """
-    adj = [(i, j) for i in [-1, 0, 1] for j in [-1, 0, 1]]
-    for k in adj:
+    # adj = [(i, j) for i in [-1, 0, 1] for j in [-1, 0, 1]]
+    for k in ADJ:
         x, y = loc_x + k[0], loc_y + k[1]
-        if x < 0 or x >= ROWS or y < 0 or y >= COLS:
-            continue
-        elif cell_id[x][y].state == 0:
-            cell_id[x][y].open_sesame()
-            if cell_id[x][y].get_value() == 0:
-                encounter_blank(cell_id, x, y)
+        if x >= 0 and x < ROWS and y >= 0 and y < COLS:     # Check bounds on location
+            if cell_id[x][y].state == 0:    # Check if cell is closed
+                cell_id[x][y].open_sesame()
+                if cell_id[x][y].get_value() == 0:
+                    blank_encounter(cell_id, x, y)
 
 
 def main():
@@ -114,16 +133,22 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 board.update(event)
                 button = event.button
-                if button == 1:
-                    mouse_pos = event.pos
-                    x, y = get_loc_from_pos(mouse_pos)
-                    if cell_id[x][y].state == 1:
+                print("Button pressed: ", button)
+                mouse_pos = event.pos
+                x, y = get_loc_from_pos(mouse_pos)
+
+                # Check if x, y correspond to a grid location
+                if x < ROWS and y < COLS and cell_id[x][y].state == 1:
+                    if button == 1:
                         if cell_id[x][y].get_value() == 0:
-                            encounter_blank(cell_id, x, y)
+                            blank_encounter(cell_id, x, y)  #
                         elif cell_id[x][y].ruin:
                             print("BETTER LUCK IN NEXT JANM")
                             pygame.quit()
                             return
+                    if button == 2:
+                        open_neighbours(cell_id, x, y)
+                        # Incorporate game end on opening mine
 
 
 if __name__ == '__main__':
