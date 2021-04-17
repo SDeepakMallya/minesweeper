@@ -2,20 +2,21 @@
 
 import pygame
 
-
+CELL_WIDTH = 20
+CELL_HEIGHT = 20
 
 def load_image(path):
     try:
         image = pygame.image.load(path)
     except pygame.error as message:
-        print("Cannot load image:", name)
+        print("Cannot load image:", path)
         raise SystemExit(message)
     image = image.convert()
     return image
 
 
 
-class Cells(pygame.sprite.Sprite):
+class Cell(pygame.sprite.Sprite):
     """
     Sprite class for cells
     """
@@ -24,12 +25,12 @@ class Cells(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.state = state    # 0 for Closed cell, 1 for open, 2 for flagged
-        self.__value = value        # Default: Closed cell (-1 for mine, 0-8 otherwise)
+        self.__value = value        # Default: (-1 for mine, 0-8 otherwise)
         img_src = './images/closed.png'      # Closed cell
         self.image = load_image(img_src)
 
         self.rect = self.image.get_rect()
-        self.rect.center = pos      # Set position of cell'
+        self.rect.center = [pos[0] * CELL_WIDTH + CELL_WIDTH//2, pos[1] * CELL_HEIGHT + CELL_HEIGHT//2]      # Set position of cell
         self.ruin = False
 
 
@@ -39,8 +40,8 @@ class Cells(pygame.sprite.Sprite):
         else:
             return None
 
-    def set_value(self, value):
-        self.__value = value
+    def get_state(self):
+        return self.state
 
     def open_sesame(self):
         if self.__value >= 0:
@@ -62,13 +63,11 @@ class Cells(pygame.sprite.Sprite):
         self.state = 0
 
     def update(self, click):
-        # self.open_sesame()
-        if self.rect.collidepoint(click.pos):
-            if self.state == 0:
-                if click.button == 1:
-                    self.open_sesame()
-                elif click.button == 3:
-                    self.flag()
-            elif self.state == 2 and click.button == 3:
-                self.unflag()
+        if self.state == 0:
+            if click.button == 1:
+                self.open_sesame()
+            elif click.button == 3:
+                self.flag()
+        elif self.state == 2 and click.button == 3:
+            self.unflag()
 
