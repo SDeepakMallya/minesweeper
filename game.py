@@ -23,7 +23,7 @@ class Game:
         self.cells_remaining = self.rows * self.cols - self.mines
 
         for loc in range(rows*cols):
-            c, r = int(loc%cols), int(loc//cols)
+            c, r = int(loc % cols), int(loc // cols)
             center = [c, r]
             if loc in self.mine_locations:
                 cell = Cell(center, value = -1, state = 0)

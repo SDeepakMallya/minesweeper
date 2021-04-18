@@ -48,10 +48,10 @@ def main():
                 return
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 button = event.button
-                print("Button pressed: ", button)
+                # print("Button pressed: ", button)
                 mouse_pos = event.pos
                 loc = get_loc_from_pos(mouse_pos)
-                print("Clicked Cell: {}".format(loc))
+                # print("Clicked Cell: {}".format(loc))
                 if loc[0] < rows and loc[1] < cols:
                     changed_cells = game.play(loc, button)
 
