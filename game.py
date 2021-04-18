@@ -64,6 +64,8 @@ class Game:
                         nei_1d = nei[0] * self.cols + nei[1]
                         if self.cell_list[nei_1d].get_state() == 0:
                             self.cell_list[nei_1d].open_sesame()
+                            if self.cell_list[nei_1d].get_value() == -1:
+                                self.game_on = False
                             changed_cells.append(self.cell_list[nei_1d])
                             if self.cell_list[nei_1d].get_value() == 0:
                                 changed_cells += self.blank_encounter(nei)
