@@ -21,14 +21,14 @@ class Cell(pygame.sprite.Sprite):
     Sprite class for cells
     """
 
-    def __init__(self, pos, value=0, state=1):
+    def __init__(self, pos, ind, value=0, state=1):
         pygame.sprite.Sprite.__init__(self)
 
         self.state = state    # 0 for Closed cell, 1 for open, 2 for flagged
         self.__value = value        # Default: (-1 for mine, 0-8 otherwise)
         img_src = './images/closed.png'      # Closed cell
         self.image = load_image(img_src)
-
+        self.ind = ind
         self.rect = self.image.get_rect()
         self.rect.center = [pos[0] * CELL_WIDTH + CELL_WIDTH//2, pos[1] * CELL_HEIGHT + CELL_HEIGHT//2]      # Set position of cell
         self.ruin = False

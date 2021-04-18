@@ -24,7 +24,7 @@ class Game:
             c, r = int(loc % cols), int(loc // cols)
             center = [c, r]
             if loc in self.mine_locations:
-                cell = Cell(center, value = -1, state = 0)
+                cell = Cell(center, ind = loc, value = -1, state = 0)
                 self.cell_list.append(cell)
                 self.cell_group.add(cell)
             else:
@@ -35,7 +35,7 @@ class Game:
                         loc_1d = nei[0] * self.cols + nei[1] 
                         if loc_1d in self.mine_locations:
                             neighbour_mines += 1
-                cell = Cell(center, value = neighbour_mines, state = 0)
+                cell = Cell(center, ind = loc, value = neighbour_mines, state = 0)
                 self.cell_list.append(cell)
                 self.cell_group.add(cell)
 

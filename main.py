@@ -53,25 +53,22 @@ def main():
                 loc = get_loc_from_pos(mouse_pos)
                 # print("Clicked Cell: {}".format(loc))
                 if loc[0] < rows and loc[1] < cols:
-                    changed_rects =  [cell.rect for cell in game.play(loc, button)]
-
+                    changed_cells = game.play(loc, button)
+                    changed_rects =  [cell.rect for cell in changed_cells]
                 
                 if not game.game_on:
                     print ("Better Luck Next Time.")
                     print ("Mines Remaining: {}, Cells Remaining: {}".format(game.mines_remaining, game.cells_remaining))
-
                     pygame.quit()
                     return
                 
                 elif not game.mines_remaining:
                     print ("Congrats! You flagged all the mines!")
-
                     pygame.quit()
                     return
 
                 elif not game.cells_remaining:
                     print ("Congrats! You cleared the board!")
-
                     pygame.quit()
                     return
 
