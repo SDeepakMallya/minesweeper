@@ -110,4 +110,4 @@ class Game:
                 self.mines_remaining += 1
                 changed_cells.append(self.cell_list[loc_1d])
         
-        return [cell.rect for cell in changed_cells]
+        return changed_cells

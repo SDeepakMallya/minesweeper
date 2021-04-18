@@ -53,7 +53,7 @@ def main():
                 loc = get_loc_from_pos(mouse_pos)
                 # print("Clicked Cell: {}".format(loc))
                 if loc[0] < rows and loc[1] < cols:
-                    changed_cells = game.play(loc, button)
+                    changed_rects =  [cell.rect for cell in game.play(loc, button)]
 
                 
                 if not game.game_on:
@@ -80,7 +80,7 @@ def main():
       
         #TO DO: restrict update to just changed cells
         game.cell_group.draw(screen)
-        pygame.display.update(changed_cells)            
+        pygame.display.update(changed_rects)            
         
 if __name__ == '__main__':
     main()
