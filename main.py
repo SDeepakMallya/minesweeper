@@ -46,7 +46,7 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 button = event.button
                 # print("Button pressed: ", button)
                 mouse_pos = event.pos
@@ -80,7 +80,7 @@ def main():
       
         #TO DO: restrict update to just changed cells
         game.cell_group.draw(screen)
-        pygame.display.update()            
+        pygame.display.update(changed_cells)            
         
 if __name__ == '__main__':
     main()
