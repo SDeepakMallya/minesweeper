@@ -62,12 +62,12 @@ class Cell(pygame.sprite.Sprite):
         self.image = load_image(img_src)
         self.state = 0
 
-    def update(self, click):
+    def update(self, button):
         if self.state == 0:
-            if click.button == 1:
+            if button == 1:
                 self.open_sesame()
-            elif click.button == 3:
+            elif button == 3:
                 self.flag()
-        elif self.state == 2 and click.button == 3:
+        elif self.state == 2 and button == 3:
             self.unflag()
 
