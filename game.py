@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-
-import math
 import random
 import pygame
 
@@ -58,17 +56,7 @@ class Game:
                         count_flagged += 1
 
             if count_flagged == self.cell_list[loc_1d].get_value():
-                for k in ADJ:
-                    nei = [loc[0] + k[0], loc[1] + k[1]]
-                    if nei[0] >= 0 and nei[0] < self.rows and nei[1] >= 0 and nei[1] < self.cols:
-                        nei_1d = nei[0] * self.cols + nei[1]
-                        if self.cell_list[nei_1d].get_state() == 0:
-                            self.cell_list[nei_1d].open_sesame()
-                            if self.cell_list[nei_1d].get_value() == -1:
-                                self.game_on = False
-                            changed_cells.append(self.cell_list[nei_1d])
-                            if self.cell_list[nei_1d].get_value() == 0:
-                                changed_cells += self.blank_encounter(nei)
+                changed_cells = self.blank_encounter(loc)
         return changed_cells
 
 
@@ -83,6 +71,8 @@ class Game:
                 nei_1d = nei[0] * self.cols + nei[1]
                 if self.cell_list[nei_1d].get_state() == 0:
                     self.cell_list[nei_1d].open_sesame()
+                    if self.cell_list[nei_1d].get_value() == -1:
+                        self.game_on = False
                     changed_cells.append(self.cell_list[nei_1d])
                     if self.cell_list[nei_1d].get_value() == 0:
                         changed_cells += self.blank_encounter(nei)
@@ -97,11 +87,11 @@ class Game:
                 self.cell_list[loc_1d].open_sesame()
                 changed_cells.append(self.cell_list[loc_1d])
 
-            if self.cell_list[loc_1d].get_value() == 0:
-                changed_cells += self.blank_encounter(loc)
-            
-            if self.cell_list[loc_1d].get_value() == -1:
-                self.game_on = False
+                if self.cell_list[loc_1d].get_value() == 0:
+                    changed_cells += self.blank_encounter(loc)
+                
+                if self.cell_list[loc_1d].get_value() == -1:
+                    self.game_on = False
             
             self.cells_remaining -= len(changed_cells)
         
