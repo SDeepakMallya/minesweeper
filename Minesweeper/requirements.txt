@@ -1,0 +1,8 @@
+cvxopt==1.2.5
+mpmath==1.1.0
+numpy==1.18.5
+pkg-resources==0.0.0
+scipy==1.4.1
+selenium==3.141.0
+sympy==1.6.1
+urllib3==1.25.10
