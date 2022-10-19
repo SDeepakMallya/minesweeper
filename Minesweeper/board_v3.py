@@ -40,8 +40,12 @@ def get_cell_value(elem):
         val = -1
     elif val == 'd': # Flagged (Currently not used)
         val = -2
-    elif val == 'h':
-        val = -3     # Mine, used continuing with a guess
+    elif val == '1':
+        if elem.get_attribute('class')[-2] == '1':
+            val = -3     # Mine, used continuing with a guess
+        else:
+            val = int(val)
+
     else:
         val = int(val)
     return val
@@ -183,7 +187,7 @@ def solve4locations(alpha, beta, guess, tol=1e-3):
     """
     Obtain info about mine/safe locations
     """
-    sol_x, succ = sweeper.cvx4mines(alpha, beta)
+    sol_x, succ = sweeper.ipm4mines(alpha, beta)
     if not succ:
         raise RuntimeError('Linprog failed')
     # sol_x = sweeper.MineProbs(alpha, beta)
