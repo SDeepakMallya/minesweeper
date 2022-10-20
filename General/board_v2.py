@@ -229,7 +229,7 @@ def update_data(mine_locs, safe_locs, cells, data):
     for ml in mine_locs:
         x, y = ml
         # cells[x][y].context_click() # Flag the cell
-        # flag_cell(cells[x][y], action)
+        flag_cell(cells[x][y], action)
         data[x][y] = -2     # Flag the cell
     return data, enc_blank, False
 
