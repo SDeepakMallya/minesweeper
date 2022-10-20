@@ -298,28 +298,12 @@ def solve_board(cells, data, tot_mines, guess):
         if dead:
             print("Better luck next time")
             return mine_count, False
-        # if tot_mines - mine_count < 10:
-            # Add total_mine_constraint
-            # A, b, locs = total_mine_constraint()
-            # pass
+
 
         if flag:    # Encountered a blank cell
             data = read_data(cells, data)
             A, b, locs = problem_formulation(data)
 
-            # Alternate update rule (Has some bugs).
-            # Reduces redundannt calculations but
-            # no significant improvement in runtime on expert mode
-
-            # data, bdry = read_data_rev(cells, data)
-            # A, b, locs = update_problem(A, b, locs, data, adjs, mines, safe)
-            # bdry_ind = []
-            # for pos in bdry:
-            #     ind = elem_index(locs, pos)
-            #     if ind is not None:
-            #         bdry_ind.append(ind)
-            #     A = np.delete(A, bdry_ind, axis=1)
-            #     A, b, locs = add_constraint(pos, A, b, locs, data, adjs)
         else:
             A, b, locs = update_problem(A, b, locs, data, adjs, mines, safe)
 
@@ -395,7 +379,6 @@ if __name__ == '__main__':
     # opt.add_argument("--private")
 
     browser = webdriver.Chrome(executable_path='/home/sdeepakmallya/chromedriver')
-    # browser = webdriver.Firefox(executable_path=r'/home/sdeepakmallya/geckodriver')
     browser.get('http://minesweeperonline.com/')
     mode = 'intermediate'
     mode = input('Mode (beginner/intermediate/expert):')
